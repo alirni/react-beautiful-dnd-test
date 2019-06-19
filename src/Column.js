@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import Task from "./Task";
+import { Droppable } from "react-beautiful-dnd";
 
 const styles = {
   container: {
@@ -14,19 +15,31 @@ const styles = {
   }
 };
 
+const TaskList = () => <div />;
+const Container = () => <div />;
+
 class Column extends React.Component {
   render() {
     const {classes, column, tasks} = this.props;
 
     return (
-      <div className={classes.container}>
+      <Container className={classes.container}>
         <div className={classes.title}>
           {column.title}
         </div>
-        <div className={classes.taskList}>
-          {tasks.map( task => <Task key={task.id} task={task} />)}
-        </div>
-      </div>
+        <Droppable droppableId={column.id}>
+          {provided => (
+            <TaskList
+              {...provided.droppableProps}
+              innerRef={provided.innerRef}
+              className={classes.taskList}
+            >
+              {tasks.map((task, index) => <Task key={task.id} task={task} index={index}/>)}
+              {provided.placeholder}
+            </TaskList>
+          )}
+        </Droppable>
+      </Container>
     );
   }
 }

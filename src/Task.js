@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
+import { Draggable } from "react-beautiful-dnd";
 
 const styles = {
   container: {
@@ -8,14 +9,25 @@ const styles = {
   },
 };
 
+const Container = () => <div />;
+
 class Task extends React.Component {
   render() {
-    const {classes, task} = this.props;
+    const {classes, task, index} = this.props;
 
     return (
-      <div className={classes.container}>
-        {task.content}
-      </div>
+      <Draggable draggableId={task.id} index={index}>
+        {provided => (
+          <Container
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            innerRef={provided.innerRef}
+            className={classes.container}
+          >
+            {task.content}
+          </Container>
+        )}
+      </Draggable>
     );
   }
 }
